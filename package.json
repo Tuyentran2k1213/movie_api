@@ -2,7 +2,7 @@
   "name": "movie",
   "version": "1.0",
   "description": "project movie",
-  "main": "index.js",
+  "main": "app",
   "repository": "https://github.com/Tuyentran2k1213/movie_api.git",
   "author": "Tran Tuyen",
   "license": "MIT",
