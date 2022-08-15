@@ -34,6 +34,11 @@ module.exports = function(sequelize, DataTypes) {
     trailer: {
       type: DataTypes.STRING(255),
       allowNull: true
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     sequelize,

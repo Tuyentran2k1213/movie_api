@@ -30,6 +30,11 @@ module.exports = function(sequelize, DataTypes) {
         model: 'showtime',
         key: 'id'
       }
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     sequelize,

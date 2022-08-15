@@ -38,6 +38,11 @@ module.exports = function(sequelize, DataTypes) {
         model: 'seat',
         key: 'id'
       }
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     sequelize,

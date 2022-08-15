@@ -1,4 +1,5 @@
 var DataTypes = require("sequelize").DataTypes;
+var _access_token = require("./access_token");
 var _cinema = require("./cinema");
 var _cinema_movie = require("./cinema_movie");
 var _cineplex = require("./cineplex");
@@ -9,6 +10,7 @@ var _ticket = require("./ticket");
 var _user = require("./user");
 
 function initModels(sequelize) {
+  var access_token = _access_token(sequelize, DataTypes);
   var cinema = _cinema(sequelize, DataTypes);
   var cinema_movie = _cinema_movie(sequelize, DataTypes);
   var cineplex = _cineplex(sequelize, DataTypes);
@@ -38,6 +40,7 @@ function initModels(sequelize) {
   user.hasMany(ticket, { as: "tickets", foreignKey: "userId"});
 
   return {
+    AccessToken: access_token,
     Cinema: cinema,
     Cinema_movie: cinema_movie,
     Cineplex: cineplex,
