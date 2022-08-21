@@ -3,6 +3,6 @@ const filmMana = express.Router();
 
 const film = require('./filmMana');
 
-filmMana.use('/film_mana', film);
+filmMana.use('/movie_mana', film);
 
 module.exports = filmMana;

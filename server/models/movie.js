@@ -39,6 +39,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       defaultValue: 0
+    },
+    images: {
+      type: DataTypes.JSON,
+      allowNull: true
     }
   }, {
     sequelize,

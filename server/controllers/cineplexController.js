@@ -68,7 +68,8 @@ const updateCineplex = async (req, res) => {
     if(verifyToken){
         try{
             const { id } = req.params;
-            const { name, logo } = req.body;
+            const { name } = req.body;
+            const logo = req.file.path;
 
             const modalCineplex = { name, logo };
             
@@ -142,7 +143,8 @@ const createCineplex = async (req, res) => {
 
     if(verifyToken){
         try{
-            const { name, logo } = req.body;
+            const { name } = req.body;
+            const logo = req.file.path;
             const modalCineplex = { name, logo };
             if(name && logo){
                 const checkCineplex = await Cineplex.findOne({ where: { name }});
