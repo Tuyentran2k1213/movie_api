@@ -2,20 +2,20 @@ const Models = require('../models/index');
 const response = require('../config/response');
 const checkAccessToken = require('../config/accessToken');
 
-const { User } = Models;
+const { Cineplex } = Models;
 const { errFE, errBE, complete } = response;
 
-//get all the user in list
-const getAllUsers = async (req, res) => {
+//get all the cineplex in list
+const getAllCineplex = async (req, res) => {
     //check if req have accessToken
     const accessToken = req.header('accessToken');
     const verifyToken = await checkAccessToken(accessToken);
 
     if(verifyToken){
         try{
-            const allUsers = await User.findAll({ where: { deleted: false },  attributes: {
+            const allCineplex = await Cineplex.findAll({ where: { deleted: false },  attributes: {
                 exclude: ['deleted']} });
-            complete(res, allUsers);
+            complete(res, allCineplex);
         } catch(err) {
             errBE(res, err);
         }
@@ -24,8 +24,8 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-// user with already has id in params
-const getUserById = async (req, res) => {
+// cineplex with already has id in params
+const getCineplexId = async (req, res) => {
 
     const accessToken = req.header('accessToken');
     const verifyToken = await checkAccessToken(accessToken);
@@ -35,16 +35,16 @@ const getUserById = async (req, res) => {
             const { id } = req.params;
             
             if(id){
-                const user = await User.findOne({ where: {
+                const cineplex = await Cineplex.findOne({ where: {
                     id: Number(id),
                     deleted: false
                 }, attributes: {
                     exclude: ['deleted']}});
 
-                if(user){
-                    complete(res, user);
+                if(cineplex){
+                    complete(res, cineplex);
                 } else {
-                    errFE(res, null, 'the id user is not exist')
+                    errFE(res, null, 'the id of cineplex is not exist')
                 }
 
             }else {
@@ -60,31 +60,31 @@ const getUserById = async (req, res) => {
     
 }
 
-// update user by id im params
-const updateUser = async (req, res) => {
+// update cineplex by id im params
+const updateCineplex = async (req, res) => {
     const accessToken = req.header('accessToken');
     const verifyToken = await checkAccessToken(accessToken);
 
     if(verifyToken){
         try{
             const { id } = req.params;
-            const { username, email, phone, password } = req.body;
+            const { name, logo } = req.body;
 
-            const modalUser = { username, email, phone, password };
+            const modalCineplex = { name, logo };
             
-            if(id && username && email && phone && password){
+            if(name && logo){
 
-                const checkUser = await User.findOne({ where: {
+                const checkCineplex = await Cineplex.findOne({ where: {
                     id: Number(id),
                     deleted: false
                 }});
 
-                if(checkUser){
-                    const userResult = await checkUser.update(modalUser);
-                    const { username, email, phone, password } = userResult;
-                    complete(res, { username, email, phone, password });
+                if(checkCineplex){
+                    const cineplexResult = await checkCineplex.update(modalCineplex);
+                    const { name, logo } = cineplexResult;
+                    complete(res, { name, logo });
                 } else {
-                    errFE(res, null, 'user id does not exist');
+                    errFE(res, null, 'cineplex id does not exist');
                 }
 
             } else {
@@ -100,8 +100,8 @@ const updateUser = async (req, res) => {
 
 }
 
-// delete user by id from params
-const deleUser = async (req, res) => {
+// delete delete by id from params
+const deleCineplex = async (req, res) => {
     const accessToken = req.header('accessToken');
     const verifyToken = await checkAccessToken(accessToken);
 
@@ -111,16 +111,16 @@ const deleUser = async (req, res) => {
             
             if(id){
 
-                const checkUser = await User.findOne({ where: {
+                const checkCineplex = await Cineplex.findOne({ where: {
                     id: Number(id),
                     deleted: false
                 }});
 
-                if(checkUser){
-                    const result = await checkUser.update({ deleted: true });
-                    complete(res, null, 'delete done !!!');
+                if(checkCineplex){
+                    const cineplexResult = await checkCineplex.update({ deleted: true });
+                    complete(res, null, 'delete cineplex done !!!');
                 } else {
-                    errFE(res, null, "this user id is not existing");
+                    errFE(res, null, "this cineplex id is not existing");
                 }
 
             } else {
@@ -135,26 +135,26 @@ const deleUser = async (req, res) => {
     }
 }
 
-//create a user
-const createUser = async (req, res) => {
+//create a cineplex
+const createCineplex = async (req, res) => {
     const accessToken = req.header('accessToken');
     const verifyToken = await checkAccessToken(accessToken);
 
     if(verifyToken){
         try{
-            const { username, email, phone, password } = req.body;
-            const modalUser = { username, email, phone, password };
-            if(username && email && phone && password){
-                const checkUser = await User.findOne({ where: { username }});
-                if(checkUser){
-                    errFE(res, null, 'your username has already exist');
+            const { name, logo } = req.body;
+            const modalCineplex = { name, logo };
+            if(name && logo){
+                const checkCineplex = await Cineplex.findOne({ where: { name }});
+                if(checkCineplex){
+                    errFE(res, null, 'your cineplex name has already exist');
                 }
-                if(!checkUser){
-                    const resultCreate = await User.create(modalUser);
-                    complete(res, { id: resultCreate.id, ...modalUser, password: resultCreate.password});
+                if(!checkCineplex){
+                    const resultCreateCineplex = await Cineplex.create(modalCineplex);
+                    complete(res, { id: resultCreateCineplex.id, ...modalCineplex});
                 }
             } else {
-                errFE(res, null, "don't have enough ");
+                errFE(res, null, "don't have enough data for cineplex");
             }
 
         } catch(err) {
@@ -167,9 +167,9 @@ const createUser = async (req, res) => {
 
 
 module.exports = {
-    getAllUsers,
-    getUserById,
-    updateUser,
-    deleUser,
-    createUser
+    getAllCineplex,
+    getCineplexId,
+    updateCineplex,
+    deleCineplex,
+    createCineplex
 }
