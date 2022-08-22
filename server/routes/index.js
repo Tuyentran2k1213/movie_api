@@ -9,7 +9,10 @@ const authMana = require('./authMana/index');
 const tokenMana = require('./tokenMana');
 const cineplexMana = require('./cineplexMana/index');
 
+const middleware = require('../config/middleware');
+const { verifyToken } = middleware;
 
-rootRouter.use('/v1', userMana, ticketMana, theaterMana, filmMana, authMana, tokenMana, cineplexMana);
+
+rootRouter.use('/v1', verifyToken, userMana, ticketMana, theaterMana, filmMana, authMana, tokenMana, cineplexMana);
 
 module.exports = rootRouter;

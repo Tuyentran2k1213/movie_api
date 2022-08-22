@@ -1,169 +1,132 @@
 const Models = require('../models/index');
 const response = require('../config/response');
-const checkAccessToken = require('../config/accessToken');
 
 const { Cineplex } = Models;
 const { errFE, errBE, complete } = response;
 
 //get all the cineplex in list
 const getAllCineplex = async (req, res) => {
-    //check if req have accessToken
-    const accessToken = req.header('accessToken');
-    const verifyToken = await checkAccessToken(accessToken);
-
-    if(verifyToken){
-        try{
-            const allCineplex = await Cineplex.findAll({ where: { deleted: false },  attributes: {
-                exclude: ['deleted']} });
-            complete(res, allCineplex);
-        } catch(err) {
-            errBE(res, err);
-        }
-    } else {
-        errFE(res, null, 'your access token is not available !!');
+    try{
+        const allCineplex = await Cineplex.findAll({ where: { deleted: false },  attributes: {
+            exclude: ['deleted']} });
+        complete(res, allCineplex);
+    } catch(err) {
+        errBE(res, err);
     }
 }
 
 // cineplex with already has id in params
 const getCineplexId = async (req, res) => {
 
-    const accessToken = req.header('accessToken');
-    const verifyToken = await checkAccessToken(accessToken);
+    try{
+        const { id } = req.params;
+        
+        if(id){
+            const cineplex = await Cineplex.findOne({ where: {
+                id: Number(id),
+                deleted: false
+            }, attributes: {
+                exclude: ['deleted']}});
 
-    if(verifyToken){
-        try{
-            const { id } = req.params;
-            
-            if(id){
-                const cineplex = await Cineplex.findOne({ where: {
-                    id: Number(id),
-                    deleted: false
-                }, attributes: {
-                    exclude: ['deleted']}});
-
-                if(cineplex){
-                    complete(res, cineplex);
-                } else {
-                    errFE(res, null, 'the id of cineplex is not exist')
-                }
-
-            }else {
-                errFE(res, null, "can not get id from the params")
+            if(cineplex){
+                complete(res, cineplex);
+            } else {
+                errFE(res, null, 'the id of cineplex is not exist')
             }
 
-        } catch(err) {
-            errBE(res, err);
+        }else {
+            errFE(res, null, "can not get id from the params")
         }
-    } else {
-        errFE(res, null, 'your access token is not available !!');
+
+    } catch(err) {
+        errBE(res, err);
     }
     
 }
 
 // update cineplex by id im params
 const updateCineplex = async (req, res) => {
-    const accessToken = req.header('accessToken');
-    const verifyToken = await checkAccessToken(accessToken);
+    try{
+        const { id } = req.params;
+        const { name } = req.body;
+        const logo = req.file.path;
 
-    if(verifyToken){
-        try{
-            const { id } = req.params;
-            const { name } = req.body;
-            const logo = req.file.path;
+        const modalCineplex = { name, logo };
+        
+        if(name && logo){
 
-            const modalCineplex = { name, logo };
-            
-            if(name && logo){
+            const checkCineplex = await Cineplex.findOne({ where: {
+                id: Number(id),
+                deleted: false
+            }});
 
-                const checkCineplex = await Cineplex.findOne({ where: {
-                    id: Number(id),
-                    deleted: false
-                }});
-
-                if(checkCineplex){
-                    const cineplexResult = await checkCineplex.update(modalCineplex);
-                    const { name, logo } = cineplexResult;
-                    complete(res, { name, logo });
-                } else {
-                    errFE(res, null, 'cineplex id does not exist');
-                }
-
+            if(checkCineplex){
+                const cineplexResult = await checkCineplex.update(modalCineplex);
+                const { name, logo } = cineplexResult;
+                complete(res, { name, logo });
             } else {
-                errFE(res, null, "can not get data")
+                errFE(res, null, 'cineplex id does not exist');
             }
 
-        } catch(err) {
-            errBE(res, err);
+        } else {
+            errFE(res, null, "can not get data")
         }
-    } else {
-        errFE(res, null, 'your access token is not available !!');
+
+    } catch(err) {
+        errBE(res, err);
     }
 
 }
 
 // delete delete by id from params
 const deleCineplex = async (req, res) => {
-    const accessToken = req.header('accessToken');
-    const verifyToken = await checkAccessToken(accessToken);
+    try{
+        const { id } = req.params;
+        
+        if(id){
 
-    if(verifyToken){
-        try{
-            const { id } = req.params;
-            
-            if(id){
+            const checkCineplex = await Cineplex.findOne({ where: {
+                id: Number(id),
+                deleted: false
+            }});
 
-                const checkCineplex = await Cineplex.findOne({ where: {
-                    id: Number(id),
-                    deleted: false
-                }});
-
-                if(checkCineplex){
-                    const cineplexResult = await checkCineplex.update({ deleted: true });
-                    complete(res, null, 'delete cineplex done !!!');
-                } else {
-                    errFE(res, null, "this cineplex id is not existing");
-                }
-
+            if(checkCineplex){
+                const cineplexResult = await checkCineplex.update({ deleted: true });
+                complete(res, null, 'delete cineplex done !!!');
             } else {
-                errFE(res, null, "can not get data")
+                errFE(res, null, "this cineplex id is not existing");
             }
 
-        } catch(err) {
-            errBE(res, err, "there some error from action !");
+        } else {
+            errFE(res, null, "can not get data")
         }
-    } else {
-        errFE(res, null, 'your access token is not available !!');
+
+    } catch(err) {
+        errBE(res, err, "there some error from action !");
     }
 }
 
 //create a cineplex
 const createCineplex = async (req, res) => {
-    const accessToken = req.header('accessToken');
-    const verifyToken = await checkAccessToken(accessToken);
-
-    if(verifyToken){
-        try{
-            const { name } = req.body;
-            const logo = req.file.path;
-            const modalCineplex = { name, logo };
-            if(name && logo){
-                const checkCineplex = await Cineplex.findOne({ where: { name }});
-                if(checkCineplex){
-                    errFE(res, null, 'your cineplex name has already exist');
-                }
-                if(!checkCineplex){
-                    const resultCreateCineplex = await Cineplex.create(modalCineplex);
-                    complete(res, { id: resultCreateCineplex.id, ...modalCineplex});
-                }
-            } else {
-                errFE(res, null, "don't have enough data for cineplex");
+    try{
+        const { name } = req.body;
+        const logo = req.file.path;
+        const modalCineplex = { name, logo };
+        if(name && logo){
+            const checkCineplex = await Cineplex.findOne({ where: { name }});
+            if(checkCineplex){
+                errFE(res, null, 'your cineplex name has already exist');
             }
-
-        } catch(err) {
-            errBE(res, err, "there some error from action !");
+            if(!checkCineplex){
+                const resultCreateCineplex = await Cineplex.create(modalCineplex);
+                complete(res, { id: resultCreateCineplex.id, ...modalCineplex});
+            }
+        } else {
+            errFE(res, null, "don't have enough data for cineplex");
         }
-    } else {
-        errFE(res, null, 'your access token is not available !!');
+
+    } catch(err) {
+        errBE(res, err, "there some error from action !");
     }
 }
 
