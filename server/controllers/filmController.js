@@ -1,13 +1,24 @@
 const Models = require('../models/index');
 const response = require('../config/response');
 
-const { Movie } = Models;
+const { Movie, Cinema_movie, Cinema } = Models;
 const { errFE, errBE, complete } = response;
 
 //get all the movie in list
 const getAllFilm = async (req, res) => {
     try{
-        const allMovie = await Movie.findAll({ where: { deleted: false },  attributes: {
+        const allMovie = await Movie.findAll({ where: { deleted: false }, include: {
+            model: Cinema_movie,
+            as: 'cinema_movies',
+            include: {
+                model: Cinema,
+                as: 'cinema',
+                attributes: {
+                    exclude: ['deleted']}
+            },
+            attributes: {
+                exclude: ['movieId', 'deleted', 'cinemaId']}
+        }, attributes: {
             exclude: ['deleted']} });
         complete(res, allMovie);
     } catch(err) {
@@ -25,6 +36,17 @@ const getDetailFilm = async (req, res) => {
             const theMovie = await Movie.findOne({ where: {
                 id: Number(id),
                 deleted: false
+            }, include: {
+                model: Cinema_movie,
+                as: 'cinema_movies',
+                include: {
+                    model: Cinema,
+                    as: 'cinema',
+                    attributes: {
+                        exclude: ['deleted']}
+                },
+                attributes: {
+                    exclude: ['movieId', 'deleted', 'cinemaId']}
             }, attributes: {
                 exclude: ['deleted']}});
 

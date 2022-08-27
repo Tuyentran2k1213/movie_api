@@ -8,7 +8,7 @@ const cineplexController = require('../../controllers/cineplexController');
 cineplex.get('/getallCineplex', cineplexController.getAllCineplex);
 cineplex.get('/getCineplexById/:id', cineplexController.getCineplexId);
 cineplex.put('/updateCineplex/:id', middleware.upLoadImage.single("logo"),cineplexController.updateCineplex);
-cineplex.delete('/deleteCineplex/:id', cineplexController.deleCineplex);
-cineplex.post('/createCineplex', middleware.upLoadImage.single("logo"),cineplexController.createCineplex);
+cineplex.delete('/deleteCineplex/:id', middleware.verifyUserToken, cineplexController.deleCineplex);
+cineplex.post('/createCineplex', middleware.verifyUserToken, middleware.upLoadImage.single("logo"),cineplexController.createCineplex);
 
 module.exports = cineplex;

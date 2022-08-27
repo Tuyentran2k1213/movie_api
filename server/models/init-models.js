@@ -24,14 +24,10 @@ function initModels(sequelize) {
   cinema.hasMany(cinema_movie, { as: "cinema_movies", foreignKey: "cinemaId"});
   showtime.belongsTo(cinema, { as: "cinema", foreignKey: "cinemaId"});
   cinema.hasMany(showtime, { as: "showtimes", foreignKey: "cinemaId"});
-  ticket.belongsTo(cinema, { as: "cinema", foreignKey: "cinemaId"});
-  cinema.hasMany(ticket, { as: "tickets", foreignKey: "cinemaId"});
   cinema.belongsTo(cineplex, { as: "cineplex", foreignKey: "cineplexId"});
   cineplex.hasMany(cinema, { as: "cinemas", foreignKey: "cineplexId"});
   cinema_movie.belongsTo(movie, { as: "movie", foreignKey: "movieId"});
   movie.hasMany(cinema_movie, { as: "cinema_movies", foreignKey: "movieId"});
-  ticket.belongsTo(movie, { as: "movie", foreignKey: "movieId"});
-  movie.hasMany(ticket, { as: "tickets", foreignKey: "movieId"});
   ticket.belongsTo(seat, { as: "seat", foreignKey: "seatId"});
   seat.hasMany(ticket, { as: "tickets", foreignKey: "seatId"});
   seat.belongsTo(showtime, { as: "showtime", foreignKey: "showtimeId"});

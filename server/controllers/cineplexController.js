@@ -62,8 +62,8 @@ const updateCineplex = async (req, res) => {
 
             if(checkCineplex){
                 const cineplexResult = await checkCineplex.update(modalCineplex);
-                const { name, logo } = cineplexResult;
-                complete(res, { name, logo });
+                const { id, name, logo } = cineplexResult;
+                complete(res, { id, name, logo });
             } else {
                 errFE(res, null, 'cineplex id does not exist');
             }

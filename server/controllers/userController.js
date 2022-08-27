@@ -48,9 +48,15 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
     try{
         const { id } = req.params;
-        const { username, email, phone, password } = req.body;
+        const { username, email, phone, password, user_type } = req.body;
 
-        const modalUser = { username, email, phone, password };
+        let modalUser;
+
+        if(user_type){
+            modalUser = { username, email, phone, password, user_type: user_type ? 'client' : user_type };
+        } else{
+            modalUser = { username, email, phone, password };
+        }
         
         if(id && username && email && phone && password){
 
@@ -108,8 +114,8 @@ const deleUser = async (req, res) => {
 //create a user
 const createUser = async (req, res) => {
     try{
-        const { username, email, phone, password } = req.body;
-        const modalUser = { username, email, phone, password };
+        const { username, email, phone, password, user_type } = req.body;
+        const modalUser = { username, email, phone, password, user_type: user_type ? 'client' : user_type };
         if(username && email && phone && password){
             const checkUser = await User.findOne({ where: { username }});
             if(checkUser){

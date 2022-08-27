@@ -15,22 +15,6 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    movieId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'movie',
-        key: 'id'
-      }
-    },
-    cinemaId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'cinema',
-        key: 'id'
-      }
-    },
     seatId: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -62,20 +46,6 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "userId" },
-        ]
-      },
-      {
-        name: "FK_ticketMovie",
-        using: "BTREE",
-        fields: [
-          { name: "movieId" },
-        ]
-      },
-      {
-        name: "FK_ticketCinema",
-        using: "BTREE",
-        fields: [
-          { name: "cinemaId" },
         ]
       },
       {

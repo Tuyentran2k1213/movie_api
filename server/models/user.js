@@ -27,6 +27,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       defaultValue: 0
+    },
+    user_type: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      defaultValue: "client"
     }
   }, {
     sequelize,
