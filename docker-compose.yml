@@ -1,0 +1,37 @@
+version: '3'
+services:
+  mysql_db:
+    image: 0915027460/movie:mysql_db
+    container_name: moviesql
+    env_file: .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
+    ports:
+      - $DB_PORT:$DB_PORT
+    volumes:
+      - mysql_db:/var/lib/mysql
+    networks:
+      - node-network
+  app:
+    depends_on:
+      - mysql_db
+    image: 0915027460/movie:1.0.0
+    container_name: movie_server
+    env_file: .env
+    environment:
+      - DB_HOST=mysql_db
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_PORT=$DB_PORT
+      - DB_DIALECT=$DB_DIALECT
+    ports:
+      - "3000:8080"
+    networks:
+      - node-network
+volumes:
+  mysql_db:
+    driver: local
+networks:
+  node-network:
